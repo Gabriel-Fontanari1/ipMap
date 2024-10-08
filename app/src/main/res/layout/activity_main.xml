@@ -44,5 +44,5 @@
         app:layout_constraintTop_toBottomOf="@+id/textLongitude"
         map:cameraZoom="10"
         map:uiRotateGestures="true"
-        map:uiZoomcontrols="true" />
+        map:uiZoomControls="true" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -63,5 +63,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         textLatitude.setText(""+latLng.latitude);
         textLongitude.setText(""+latLng.longitude);
 
+        LatLng santaCruz = new LatLng(latLng.latitude,latLng.longitude);
+        mMap.addMarker(new MarkerOptions().position(santaCruz).title(""));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(santaCruz));
     }
 }
