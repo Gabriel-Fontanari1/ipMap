@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
-        });
+        });///
         textLatitude = findViewById(R.id.textLatitude);
         textLongitude = findViewById(R.id.textLongitude);
 
