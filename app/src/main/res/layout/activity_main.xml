@@ -6,14 +6,16 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#9D9C9C"
     tools:context=".MainActivity">
 
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_height="400dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,7 +30,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="50dp"
-        android:background="#DBD2D2"
+        android:background="#ADABAB"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="20dp"
-            android:text="Country:" />
+            android:text="Country:"
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/textViewCountry"
@@ -49,7 +52,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="65dp"
             android:layout_marginTop="20dp"
-            android:text="Country" />
+            android:text="Country"
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/textView2"
@@ -57,7 +61,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="50dp"
-            android:text="Region Name:" />
+            android:text="Region Name:"
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/textViewRegion"
@@ -65,7 +70,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="100dp"
             android:layout_marginTop="50dp"
-            android:text="Region" />
+            android:text="Region"
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/textView3"
@@ -73,7 +79,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="80dp"
-            android:text="City:" />
+            android:text="City:"
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/textViewCity"
@@ -81,7 +88,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginTop="80dp"
-            android:text="City" />
+            android:text="City"
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/textView4"
@@ -89,7 +97,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="110dp"
-            android:text="ISP:" />
+            android:text="ISP:"
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/textViewISP"
@@ -97,12 +106,13 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="35dp"
             android:layout_marginTop="110dp"
-            android:text="ISP" />
+            android:text="ISP"
+            android:textColor="@color/black" />
     </FrameLayout>
 
     <EditText
         android:id="@+id/editTextIP"
-        android:layout_width="350dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:ems="10"
