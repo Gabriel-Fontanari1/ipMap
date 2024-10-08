@@ -17,10 +17,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.textfield.TextInputEditText;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener {
 
-    EditText textLatitude, textLongitude;
+    EditText editTextIP;
     GoogleMap mMap;
 
     @Override
@@ -33,8 +34,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        textLatitude = findViewById(R.id.textLatitude);
-        textLongitude = findViewById(R.id.textLongitude);
+
+        editTextIP = findViewById(R.id.editTextIP);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -53,15 +54,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapClick(@NonNull LatLng latLng) {
-        textLatitude.setText(""+latLng.latitude);
-        textLongitude.setText(""+latLng.longitude);
-
+        //nada por enquanto
     }
 
     @Override
     public void onMapLongClick(@NonNull LatLng latLng) {
-        textLatitude.setText(""+latLng.latitude);
-        textLongitude.setText(""+latLng.longitude);
+        //textLatitude.setText(""+latLng.latitude);
+        //textLongitude.setText(""+latLng.longitude);
 
         LatLng santaCruz = new LatLng(latLng.latitude,latLng.longitude);
         mMap.addMarker(new MarkerOptions().position(santaCruz).title(""));
