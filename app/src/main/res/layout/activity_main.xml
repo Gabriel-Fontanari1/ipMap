@@ -25,6 +25,7 @@
         map:uiZoomControls="true" />
 
     <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="346dp"
         android:layout_height="150dp"
         android:layout_marginStart="20dp"
@@ -131,6 +132,49 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         map:srcCompat="@android:drawable/ic_menu_search" />
+
+    <TextView
+        android:id="@+id/textViewConection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="170dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="177dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
+
+    <ImageView
+        android:id="@+id/imageViewDadMoveis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="4dp"
+        android:rotation="-90"
+        app:layout_constraintStart_toEndOf="@+id/textViewConection"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout"
+        map:srcCompat="@android:drawable/ic_menu_sort_by_size" />
+
+    <ImageView
+        android:id="@+id/imageViewConectado"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toEndOf="@+id/textViewConection"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout"
+        map:srcCompat="@drawable/conectado" />
+
+    <ImageView
+        android:id="@+id/imageViewDesconectado"
+        android:layout_width="35dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="7dp"
+        app:layout_constraintStart_toEndOf="@+id/textViewConection"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout"
+        map:srcCompat="@drawable/desconectado" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

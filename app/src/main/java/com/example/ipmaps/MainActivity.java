@@ -2,8 +2,10 @@ package com.example.ipmaps;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,14 +16,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.textfield.TextInputEditText;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -31,7 +31,13 @@ import retrofit2.Response;
 import android.view.inputmethod.InputMethodManager;
 import android.content.Context;
 import android.view.inputmethod.EditorInfo;
-import android.widget.TextView;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.os.Build;
+
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -43,6 +49,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     TextView textViewRegion;
     TextView textViewCity;
     TextView textViewISP;
+    TextView textViewConection;
+    ImageView imageViewDadMoveis;
+    ImageView imageViewConectado;
+    ImageView imageViewDesconectado;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +98,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             procuraIP(ip);
             fecharTeclado();
         });
+
+        // Verificar a conexão inicial
+        testarConexao();
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            connectivityManager.registerDefaultNetworkCallback(new ConnectivityManager.NetworkCallback() {
+                @Override
+                public void onAvailable(@NonNull android.net.Network network) {
+                    runOnUiThread(() -> testarConexao());
+                }
+
+                @Override
+                public void onLost(@NonNull android.net.Network network) {
+                    runOnUiThread(() -> testarConexao());
+                }
+
+                @Override
+                public void onCapabilitiesChanged(@NonNull android.net.Network network, @NonNull NetworkCapabilities networkCapabilities) {
+                    runOnUiThread(() -> testarConexao());
+                }
+            });
+        }
     }
 
 
@@ -116,16 +150,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         mMap.addMarker(new MarkerOptions().position(local).title("Localização IP: " + ip));
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(local, 10));
                     } else {
-                        Toast.makeText(MainActivity.this, "A resposta da API está vazia", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Digite um ip válido!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(MainActivity.this, "Resposta não foi bem-sucedida", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Resposta não foi bem sucedida", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<RespostaGeo> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Erro ao buscar IP: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Erro na busca: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -138,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         LatLng santaCruz = new LatLng(-29.6890566,-52.4558563);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(santaCruz));
+        testarConexao();
     }
 
     private void fecharTeclado() {
@@ -148,4 +183,61 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    public void testarConexao() {
+        textViewConection = findViewById(R.id.textViewConection);
+        imageViewConectado = findViewById(R.id.imageViewConectado);
+        imageViewDesconectado = findViewById(R.id.imageViewDesconectado);
+        imageViewDadMoveis = findViewById(R.id.imageViewDadMoveis);
+
+        int connectionStatus = getConnectionType(this);
+
+        if (connectionStatus == 1) {
+            // Conectado ao Wi-Fi
+            textViewConection.setText("Conectado à Internet (Wi-Fi)");
+            imageViewConectado.setVisibility(View.VISIBLE);
+            imageViewDesconectado.setVisibility(View.INVISIBLE);
+            imageViewDadMoveis.setVisibility(View.INVISIBLE);
+        } else if (connectionStatus == 2) {
+            // Conectado aos dados móveis
+            textViewConection.setText("Conectado aos dados móveis");
+            imageViewConectado.setVisibility(View.INVISIBLE);
+            imageViewDesconectado.setVisibility(View.INVISIBLE);
+            imageViewDadMoveis.setVisibility(View.VISIBLE);
+        } else {
+            // Sem conexão
+            textViewConection.setText("Sem conexão à Internet!");
+            imageViewConectado.setVisibility(View.INVISIBLE);
+            imageViewDesconectado.setVisibility(View.VISIBLE);
+            imageViewDadMoveis.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private int getConnectionType(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                android.net.Network network = connectivityManager.getActiveNetwork();
+                if (network != null) {
+                    NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(network);
+                    if (networkCapabilities != null) {
+                        if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                            return 1;
+                        } else if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                            return 2;
+                        }
+                    }
+                }
+            } else {
+                android.net.NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+                if (activeNetwork != null) {
+                    if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                        return 1;
+                    } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                        return 2;
+                    }
+                }
+            }
+        }
+        return 0;
+    }
 }
