@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public void onFailure(Call<RespostaGeo> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Erro na busca: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Verifique a sua conexão à internet!", Toast.LENGTH_SHORT).show();
             }
         });
     }
