@@ -2,8 +2,10 @@ package com.example.ipmaps;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +45,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     TextView textViewRegion;
     TextView textViewCity;
     TextView textViewISP;
+    TextView textViewConection;
+    ImageView imageViewDadMoveis;
+    ImageView imageViewConectado;
+    ImageView imageViewDesconectado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,4 +154,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    public void testarConeccao(){
+        textViewConection = findViewById(R.id.textViewConection);
+        imageViewConectado = findViewById(R.id.imageViewConectado);
+        imageViewDesconectado = findViewById(R.id.imageViewDesconectado);
+        //se conectado
+
+        imageViewConectado.setVisibility(View.VISIBLE);
+
+
+        //se nao conectado
+
+        //se dados moveis
+    }
 }
