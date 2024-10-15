@@ -41,6 +41,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    //atributos
     EditText editTextIP;
     GoogleMap mMap;
     ImageButton imageButtonSearch;
@@ -66,11 +67,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return insets;
         });
 
-        // Fragment do mapa
+        //fragment do mapa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // Criando retrofit
+        //cria o Retrofit para acessar a API de geolocalização
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://ip-api.com/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -78,10 +79,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         geoLocationAPI = retrofit.create(GeoLocationAPI.class);
 
-        // Ligando a função ao botão de busca
         imageButtonSearch = findViewById(R.id.imageButtonSearch);
         editTextIP = findViewById(R.id.editTextIP);
 
+        //listener para detectar o envio no teclado (quando o usr clica em "ok")
         editTextIP.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -99,32 +100,33 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             fecharTeclado();
         });
 
-        // Verificar a conexão inicial
+        //verificar a conexão inicial
         testarConexao();
 
+        //monitoramento da mudança de rede
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             connectivityManager.registerDefaultNetworkCallback(new ConnectivityManager.NetworkCallback() {
                 @Override
                 public void onAvailable(@NonNull android.net.Network network) {
-                    runOnUiThread(() -> testarConexao());
+                    runOnUiThread(() -> testarConexao()); //atualiza a ui qunado a conexão é formada
                 }
 
                 @Override
                 public void onLost(@NonNull android.net.Network network) {
-                    runOnUiThread(() -> testarConexao());
+                    runOnUiThread(() -> testarConexao());//atualiza quando a conexão for perdida
                 }
 
                 @Override
                 public void onCapabilitiesChanged(@NonNull android.net.Network network, @NonNull NetworkCapabilities networkCapabilities) {
-                    runOnUiThread(() -> testarConexao());
+                    runOnUiThread(() -> testarConexao()); //atualiza se o tipo de rede mudar
                 }
             });
         }
     }
 
 
-    // Fazendo a requisição da API para buscar a localização por IP
+    //função para fazer a requisição pra a API e buscar a localização pelo ip
     private void procuraIP(String ip) {
         textViewCountry = findViewById(R.id.textViewCountry);
         textViewRegion = findViewById(R.id.textViewRegion);
@@ -132,20 +134,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         textViewISP = findViewById(R.id.textViewISP);
         Call<RespostaGeo> call = geoLocationAPI.getLocation(ip);
 
+        //faz o request pra pra buscar a localização do ip
         call.enqueue(new Callback<RespostaGeo>() {
             @Override
             public void onResponse(Call<RespostaGeo> call, Response<RespostaGeo> response) {
                 if (response.isSuccessful()) {
                     RespostaGeo location = response.body();
+                    //identifica se o ip é valido, se ele não tiver algum dado como country vinculado, significa que não é valido
                     if (location != null && location.getCountry() != null && location.getIsp() != null) {
                         double latitude = location.getLat();
                         double longitude = location.getLon();
-
+                        //atualiza os campos com os dados do ip
                         textViewCountry.setText(location.getCountry());
                         textViewRegion.setText(location.getRegionName());
                         textViewCity.setText(location.getCity());
                         textViewISP.setText(location.getIsp());
 
+                        //define a posição no mapa, puxando a latitude e longitude
                         LatLng local = new LatLng(latitude,longitude);
                         mMap.addMarker(new MarkerOptions().position(local).title("Localização IP: " + ip));
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(local, 10));
@@ -170,11 +175,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
+        //localização inicial do mapa, que no caso é Santa Cruz
         LatLng santaCruz = new LatLng(-29.6890566,-52.4558563);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(santaCruz));
         testarConexao();
     }
 
+    //função pra fechar o teclado
     private void fecharTeclado() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -189,22 +196,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         imageViewDesconectado = findViewById(R.id.imageViewDesconectado);
         imageViewDadMoveis = findViewById(R.id.imageViewDadMoveis);
 
+        //verifica o tipo de conexão
         int connectionStatus = getConnectionType(this);
 
+        //vai atualizar o layout conforme o tipo de conexão
         if (connectionStatus == 1) {
-            // Conectado ao Wi-Fi
+            //conectado ao wifi
             textViewConection.setText("Conectado à Internet (Wi-Fi)");
             imageViewConectado.setVisibility(View.VISIBLE);
             imageViewDesconectado.setVisibility(View.INVISIBLE);
             imageViewDadMoveis.setVisibility(View.INVISIBLE);
         } else if (connectionStatus == 2) {
-            // Conectado aos dados móveis
+            //conectado aos dados móveis
             textViewConection.setText("Conectado aos dados móveis");
             imageViewConectado.setVisibility(View.INVISIBLE);
             imageViewDesconectado.setVisibility(View.INVISIBLE);
             imageViewDadMoveis.setVisibility(View.VISIBLE);
         } else {
-            // Sem conexão
+            //sem conexão a internet
             textViewConection.setText("Sem conexão à Internet!");
             imageViewConectado.setVisibility(View.INVISIBLE);
             imageViewDesconectado.setVisibility(View.VISIBLE);
@@ -212,6 +221,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    //verificar o tipo de conexão
     private int getConnectionType(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {
@@ -221,14 +231,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(network);
                     if (networkCapabilities != null) {
                         if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                            return 1;
+                            return 1; //se for wifi, vai retornar 1
                         } else if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                            return 2;
+                            return 2;//se for dados móveis vai retornar 2
                         }
                     }
                 }
             } else {
                 android.net.NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+                //verificação para as apis mais antigas do android
                 if (activeNetwork != null) {
                     if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
                         return 1;
