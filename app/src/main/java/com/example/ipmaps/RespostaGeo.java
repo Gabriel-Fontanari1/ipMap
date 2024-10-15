@@ -1,7 +1,7 @@
 package com.example.ipmaps;
 
 public class RespostaGeo {
-    //atributos
+    //atributos pra armazenar as informações que vão ser buscadas pela api
     private double lat;
     private double lon;
     private String country;
@@ -9,6 +9,7 @@ public class RespostaGeo {
     private String city;
     private String isp;
 
+    //getters e setters
     public double getLat() {
         return lat;
     }
